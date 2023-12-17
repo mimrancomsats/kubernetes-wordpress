@@ -20,7 +20,7 @@ metadata:
     app: wordpress
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 20Gi
@@ -36,8 +36,6 @@ spec:
     matchLabels:
       app: wordpress
       tier: frontend
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -51,10 +49,7 @@ spec:
         - name: WORDPRESS_DB_HOST
           value: wordpress-mysql
         - name: WORDPRESS_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
+          value: password
         - name: WORDPRESS_DB_USER
           value: wordpress
         ports:
