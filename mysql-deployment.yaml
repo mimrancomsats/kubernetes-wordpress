@@ -10,7 +10,6 @@ spec:
   selector:
     app: wordpress
     tier: mysql
-  clusterIP: None
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -20,7 +19,7 @@ metadata:
     app: wordpress
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 20Gi
@@ -36,8 +35,6 @@ spec:
     matchLabels:
       app: wordpress
       tier: mysql
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -49,19 +46,13 @@ spec:
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
+          value: password
         - name: MYSQL_DATABASE
           value: wordpress
         - name: MYSQL_USER
           value: wordpress
         - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
+          value: password
         ports:
         - containerPort: 3306
           name: mysql
